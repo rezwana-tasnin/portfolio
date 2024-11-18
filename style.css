@@ -18,20 +18,31 @@ section {
 header {
 	position: sticky;
 	top: 0;
+	background-color: rgba(0, 0, 0, 0.2);
 }
 .section-links {
 	/* background-color: orange; */
 	display: flex;
 	justify-content: flex-end;
 	list-style-type: none;
-	padding: 2rem;
+	padding: 0 2rem;
 	/* margin: 4rem; */
 }
 .section-links a {
+	display: inline-block;
+	text-decoration: none;
 	padding: 2rem;
 	/* background-color: red; */
 	font-size: 1.3rem;
-	color: rgb(0, 0, 0);
+	color: rgb(67, 67, 67);
+	align-items: center;
+}
+.section-links li {
+	display: flex;
+	align-items: center;
+}
+.section-links a:hover {
+	color: rgb(255, 64, 0);
 }
 .hero-left {
 	flex: 1;
@@ -39,7 +50,7 @@ header {
 	padding: 2rem 0 0 6rem;
 	display: flex;
 	flex-direction: column;
-	
+
 	justify-content: center;
 }
 .hero-right {
@@ -70,4 +81,16 @@ header {
 	width: 28rem;
 	border-radius: 50%;
 	border: 1rem solid white;
+}
+.button {
+	color: rgb(255, 64, 0);
+	border: 1px solid rgb(255, 64, 0);
+	border-radius: 2rem;
+	padding: 1rem 2rem !important;
+	transition: color 300ms;
+}
+.button:hover {
+	background-color: rgb(255, 64, 0);
+	color: white !important;
+
 }
