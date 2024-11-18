@@ -1,0 +1,27 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	scroll-behavior: smooth;
+}
+section {
+	min-height: 100vh;
+}
+header {
+	position: sticky;
+	top: 0;
+}
+.section-links {
+	/* background-color: orange; */
+	display: flex;
+	justify-content: flex-end;
+	list-style-type: none;
+	padding: 2rem;
+	/* margin: 4rem; */
+}
+.section-links a {
+	padding: 2rem;
+	/* background-color: red; */
+	font-size: 1.3rem;
+	color: rgb(0, 0, 0);
+}
