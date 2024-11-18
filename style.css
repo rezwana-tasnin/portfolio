@@ -7,6 +7,14 @@
 section {
 	min-height: 100vh;
 }
+#hero {
+	display: flex;
+	min-height: auto;
+	height: calc(100vh - 5rem);
+	background: rgb(236, 187, 133);
+	background: linear-gradient(90deg, rgba(236, 187, 133, 1) 0%, rgba(252, 120, 0, 1) 100%);
+}
+
 header {
 	position: sticky;
 	top: 0;
@@ -24,4 +32,42 @@ header {
 	/* background-color: red; */
 	font-size: 1.3rem;
 	color: rgb(0, 0, 0);
+}
+.hero-left {
+	flex: 1;
+	/* background-color: green; */
+	padding: 2rem 0 0 6rem;
+	display: flex;
+	flex-direction: column;
+	
+	justify-content: center;
+}
+.hero-right {
+	/* background-color: rgb(50, 50, 205); */
+	padding: 2rem;
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.hero-left .subtitle1 {
+	margin-bottom: 1rem;
+	font-size: 1.3rem;
+	color: rgb(67, 67, 67);
+}
+.hero-left .title {
+	font-size: 4.5rem;
+}
+.hero-left .subtitle2 {
+	font-size: 1.15rem;
+	width: 70%;
+	color: rgb(67, 67, 67);
+	margin-top: 1rem;
+	line-height: 1.5;
+}
+.hero-right img {
+	aspect-ratio: square;
+	width: 28rem;
+	border-radius: 50%;
+	border: 1rem solid white;
 }
