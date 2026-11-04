@@ -1,124 +1,167 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ExternalLink, FolderGit2, Star } from 'lucide-react';
+
+const GITHUB_USER = 'rezwana-tasnin';
+const REPOS_URL = `https://api.github.com/users/${GITHUB_USER}/repos?per_page=100&sort=updated`;
+
+function formatTitle(name) {
+  return name
+    .replace(/[-_]+/g, ' ')
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+function mapRepo(repo) {
+  const tech = [];
+  if (repo.language) tech.push(repo.language);
+  if (repo.topics?.length) {
+    tech.push(...repo.topics.slice(0, 3).map((t) => t.replace(/-/g, ' ')));
+  }
+
+  return {
+    id: repo.id,
+    title: formatTitle(repo.name),
+    description: repo.description?.trim() || 'GitHub repository.',
+    tech: [...new Set(tech)],
+    href: repo.html_url,
+    stars: repo.stargazers_count,
+  };
+}
 
 export default function Projects() {
-  // Top Github Projects Data
-  const projects = [
-    {
-      title: "Interactive React Portfolio",
-      description: "Modern, high-performance responsive web portfolio built with React.js, Tailwind CSS, and Framer Motion.",
-      tech: ["React.js", "Tailwind CSS", "Framer Motion"],
-      github: "https://github.com/rezwanatasnin",
-      stars: "Featured"
-    },
-    {
-      title: "Frontend UI/UX Design Hub",
-      description: "A collection of clean, accessible, and high-fidelity web interfaces crafted for optimal client experience.",
-      tech: ["JavaScript", "HTML5/CSS3", "Tailwind"],
-      github: "https://github.com/rezwanatasnin",
-      stars: "Top Repo"
+  const [projects, setProjects] = useState([]);
+  const [status, setStatus] = useState('loading');
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadRepos() {
+      try {
+        setStatus('loading');
+        const res = await fetch(REPOS_URL, {
+          signal: controller.signal,
+          headers: { Accept: 'application/vnd.github+json' },
+        });
+
+        if (!res.ok) throw new Error(`GitHub ${res.status}`);
+
+        const data = await res.json();
+        const mapped = data
+          .filter((repo) => !repo.fork && !repo.archived)
+          .sort((a, b) => {
+            if (b.stargazers_count !== a.stargazers_count) {
+              return b.stargazers_count - a.stargazers_count;
+            }
+            return new Date(b.updated_at) - new Date(a.updated_at);
+          })
+          .map(mapRepo);
+
+        setProjects(mapped);
+        setStatus(mapped.length ? 'ready' : 'empty');
+      } catch (err) {
+        if (err.name === 'AbortError') return;
+        setStatus('error');
+      }
     }
-  ];
+
+    loadRepos();
+    return () => controller.abort();
+  }, []);
 
   return (
-    <section id="projects" className="max-w-6xl mx-auto px-8 py-24 border-t border-slate-900 relative">
-      {/* Background Ambient Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+    <section id="projects" className="bg-cream">
+      <div className="max-w-6xl mx-auto section-pad py-20 md:py-28">
+        <div className="mb-14 md:mb-20 max-w-xl">
+          <p className="text-[12px] uppercase tracking-[0.2em] text-rose-deep mb-3">
+            Selected work
+          </p>
+          <h2 className="font-display text-3xl md:text-5xl text-ink tracking-tight mb-4">
+            Projects
+          </h2>
+          <p className="text-ink-soft font-light leading-relaxed">
+            Live repositories from GitHub.
+          </p>
+        </div>
 
-      <motion.div 
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        viewport={{ once: true }}
-        className="text-center mb-16"
-      >
-        <span className="px-4 py-1.5 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 inline-block mb-3">
-          ✨ Featured Repositories
-        </span>
-        <h3 className="text-3xl md:text-5xl font-black bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-300 to-purple-400">
-          GitHub Showcase
-        </h3>
-        <p className="text-slate-400 text-sm mt-3 max-w-lg mx-auto">
-          Explore my latest open-source contributions, web developments, and live projects hosted on GitHub.
-        </p>
-      </motion.div>
+        {status === 'loading' && (
+          <p className="text-ink-soft text-sm font-light border-t border-ink/10 py-10">
+            Loading projects…
+          </p>
+        )}
 
-      <div className="grid md:grid-cols-2 gap-8 relative z-10">
-        {projects.map((project, idx) => (
-          <motion.div
-            key={idx}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: idx * 0.2 }}
-            viewport={{ once: true }}
-            whileHover={{ y: -8 }}
-            className="p-8 rounded-3xl bg-gradient-to-b from-slate-900/80 to-slate-950/80 border border-slate-800/80 hover:border-indigo-500/50 transition-all duration-500 backdrop-blur-xl shadow-2xl group flex flex-col justify-between"
-          >
-            <div>
-              <div className="flex justify-between items-center mb-6">
-                <div className="p-3 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition duration-300">
-                  <FolderGit2 size={24} />
-                </div>
-                <div className="flex items-center gap-1 text-xs text-amber-400 bg-amber-400/10 border border-amber-400/20 px-3 py-1 rounded-full">
-                  <Star size={12} /> {project.stars}
-                </div>
-              </div>
+        {status === 'error' && (
+          <p className="text-ink-soft text-sm font-light border-t border-ink/10 py-10">
+            Could not load GitHub projects right now.{' '}
+            <a
+              href={`https://github.com/${GITHUB_USER}`}
+              target="_blank"
+              rel="noreferrer"
+              className="text-ink border-b border-ink/30 hover:text-rose-deep hover:border-rose-deep transition-colors"
+            >
+              View on GitHub
+            </a>
+          </p>
+        )}
 
-              <h4 className="text-2xl font-bold text-white mb-3 group-hover:text-indigo-400 transition">
-                {project.title}
-              </h4>
-              <p className="text-slate-400 text-sm mb-6 leading-relaxed">
-                {project.description}
-              </p>
-            </div>
+        {status === 'empty' && (
+          <p className="text-ink-soft text-sm font-light border-t border-ink/10 py-10">
+            No public repositories yet.
+          </p>
+        )}
 
-            <div>
-              <div className="flex flex-wrap gap-2 mb-6">
-                {project.tech.map((t, i) => (
-                  <span key={i} className="text-[11px] font-mono px-3 py-1 bg-slate-800/80 rounded-lg text-indigo-300 border border-slate-700/50">
-                    {t}
-                  </span>
-                ))}
-              </div>
-
-              <a
-                href={project.github}
+        {status === 'ready' && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+            {projects.map((project, idx) => (
+              <motion.a
+                key={project.id}
+                href={project.href}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-400 hover:text-indigo-300 transition"
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: Math.min(idx * 0.05, 0.35) }}
+                className="group flex flex-col border border-ink/10 bg-blush/40 p-5 md:p-6 hover:border-rose-deep/50 transition-colors duration-300 min-h-[11rem]"
               >
-                View Repository <ExternalLink size={16} />
-              </a>
-            </div>
-          </motion.div>
-        ))}
-      </div>
+                <span className="font-display text-rose-deep text-sm tabular-nums mb-3">
+                  {String(idx + 1).padStart(2, '0')}
+                </span>
+                <h3 className="font-display text-xl text-ink tracking-tight mb-2 group-hover:text-rose-deep transition-colors duration-300">
+                  {project.title}
+                </h3>
+                <p className="text-ink-soft font-light text-sm leading-relaxed mb-4 line-clamp-3 flex-1">
+                  {project.description}
+                </p>
+                <div className="flex items-end justify-between gap-3 mt-auto">
+                  {project.tech.length > 0 ? (
+                    <p className="text-[11px] tracking-wide text-ink-soft/80 line-clamp-1">
+                      {project.tech.join(' · ')}
+                    </p>
+                  ) : (
+                    <span />
+                  )}
+                  <span className="text-xs text-ink font-medium tracking-wide shrink-0 opacity-60 group-hover:opacity-100 transition-opacity duration-300">
+                    View →
+                  </span>
+                </div>
+              </motion.a>
+            ))}
+          </div>
+        )}
 
-      {/* Main GitHub Direct Banner */}
-      <motion.div 
-        whileHover={{ scale: 1.01 }}
-        className="mt-12 p-8 rounded-3xl bg-gradient-to-r from-blue-900/30 via-indigo-900/20 to-purple-900/30 border border-indigo-500/30 flex flex-col sm:flex-row items-center justify-between gap-6 backdrop-blur-2xl"
-      >
-        <div className="flex items-center gap-4">
-          <div className="p-4 bg-slate-900 rounded-2xl border border-slate-800 text-white">
-            {/* <Github size={32} /> */}
-          </div>
-          <div>
-            <h4 className="text-lg font-bold text-white">Want to see all my work?</h4>
-            <p className="text-xs text-slate-400">Check out all repositories, commit history & activity on GitHub.</p>
-          </div>
+        <div className="mt-14 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 pt-2">
+          <p className="text-ink-soft text-sm font-light">
+            More on GitHub.
+          </p>
+          <a
+            href={`https://github.com/${GITHUB_USER}`}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex text-sm font-medium tracking-wide text-ink border-b border-ink pb-0.5 hover:text-rose-deep hover:border-rose-deep transition-colors duration-300 w-fit"
+          >
+            github.com/{GITHUB_USER}
+          </a>
         </div>
-        <a
-          href="https://github.com/rezwana-tasnin"
-          target="_blank"
-          rel="noreferrer"
-          className="bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-3.5 rounded-2xl font-semibold text-sm transition shadow-lg shadow-indigo-600/30 flex items-center gap-2 whitespace-nowrap"
-        >
-          {/* <Github size={18} />  */}
-          Visit @rezwanatasnin
-        </a>
-      </motion.div>
+      </div>
     </section>
   );
 }

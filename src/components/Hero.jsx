@@ -1,82 +1,78 @@
-import React from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Sparkles, ArrowDownRight } from 'lucide-react';
-import profilePic from '../assets/rezwana.jpg';
+import profilePic from '../assets/rezwana-cutout.png';
 
 export default function Hero() {
   return (
-    <section id="about" className="max-w-6xl mx-auto px-8 pt-36 pb-24 flex flex-col md:flex-row items-center justify-between gap-12 relative">
-      {/* Background Glow Sphere */}
-      <div className="absolute -top-20 -left-20 w-80 h-80 bg-blue-600/15 rounded-full blur-[120px] pointer-events-none" />
-
-      {/* Text Info */}
-      <motion.div 
-        initial={{ opacity: 0, x: -40 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8 }}
-        className="max-w-2xl z-10"
-      >
-        <motion.div 
-          animate={{ y: [-3, 3, -3] }}
-          transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold mb-6 backdrop-blur-md"
-        >
-          <Sparkles size={14} /> Full-Stack & Frontend Developer
-        </motion.div>
-
-        <h1 className="text-4xl md:text-6xl font-black tracking-tight mb-6 leading-tight">
-          Hi, I'm <br />
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-300 to-purple-500">
-            Rezwana Tasnin
-          </span>
-        </h1>
-
-        <p className="text-slate-400 text-base md:text-lg mb-8 leading-relaxed max-w-xl">
-          Computer Science & Technology student from Dhaka, Bangladesh. Building clean, responsive, interactive web applications using React.js, Tailwind CSS, and JavaScript.
-        </p>
-
-        <div className="flex flex-wrap gap-4">
-          <motion.a 
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            href="mailto:rezwanatasnin@gmail.com" 
-            className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 px-8 py-4 rounded-2xl font-semibold shadow-xl shadow-indigo-500/25 flex items-center gap-2 text-sm"
+    <section id="about" className="relative min-h-[100svh] flex flex-col bg-grain overflow-hidden">
+      <div className="flex-1 grid lg:grid-cols-2 max-w-6xl mx-auto w-full pt-16 relative">
+        <div className="section-pad flex flex-col justify-center py-16 lg:py-24 order-2 lg:order-1">
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-[13px] uppercase tracking-[0.22em] text-rose-deep font-medium mb-6"
           >
-            <Mail size={18} /> Hire Me
-          </motion.a>
+            Full Stack Developer
+          </motion.p>
 
-          <motion.a 
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            href="#projects" 
-            className="border border-slate-800 bg-slate-900/80 backdrop-blur-md px-8 py-4 rounded-2xl font-semibold text-sm hover:bg-slate-800 transition flex items-center gap-2 text-slate-300"
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            className="font-display text-5xl sm:text-6xl lg:text-7xl leading-[1.05] tracking-tight text-ink mb-6"
           >
-            Explore Work <ArrowDownRight size={18} />
-          </motion.a>
+            Rezwana
+            <br />
+            Tasnin
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-ink-soft text-base sm:text-lg leading-relaxed max-w-md mb-10 font-light"
+          >
+            Computer Science student in Dhaka. Builds clean, responsive web
+            interfaces with React, Tailwind, and JavaScript.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.35 }}
+            className="flex flex-wrap items-center gap-4"
+          >
+            <a
+              href="mailto:rezwanatasnin@gmail.com"
+              className="inline-flex items-center px-7 py-3.5 bg-ink text-blush text-sm font-medium tracking-wide hover:opacity-85 transition-opacity duration-300"
+            >
+              Hire me
+            </a>
+            <a
+              href="#projects"
+              className="inline-flex items-center px-7 py-3.5 text-sm font-medium tracking-wide text-ink border-b border-ink/30 hover:border-ink transition-colors duration-300"
+            >
+              View work
+            </a>
+          </motion.div>
         </div>
-      </motion.div>
 
-      {/* Floating Animated Profile Card */}
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8 }}
-        className="relative group z-10"
-      >
-        <div className="absolute -inset-2 bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-600 rounded-3xl blur-2xl opacity-40 group-hover:opacity-80 transition duration-700 animate-pulse" />
-        
-        <motion.div 
-          animate={{ y: [-10, 10, -10] }}
-          transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
-          className="relative w-72 h-96 rounded-3xl bg-slate-900/90 border border-slate-700/60 overflow-hidden shadow-2xl p-2"
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.15 }}
+          className="relative order-1 lg:order-2 min-h-[52vh] lg:min-h-full flex items-start justify-center pt-8 lg:pt-14"
         >
-          <img 
+          <div className="hero-portrait-glow hero-portrait-glow--teal" aria-hidden="true" />
+          <div className="hero-portrait-glow hero-portrait-glow--rose" aria-hidden="true" />
+          <div className="hero-portrait-glow hero-portrait-glow--violet" aria-hidden="true" />
+          <img
             src={profilePic}
-            alt="Rezwana Tasnin" 
-            className="w-full h-full object-cover rounded-2xl group-hover:scale-105 transition duration-500"
+            alt="Rezwana Tasnin"
+            className="hero-portrait-fade relative z-10 w-[90%] max-w-md lg:max-w-xl h-auto object-contain object-top mt-2"
           />
         </motion.div>
-      </motion.div>
+      </div>
     </section>
   );
 }

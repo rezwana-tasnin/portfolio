@@ -1,1 +1,209 @@
 @import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-sans: "Commissioner", ui-sans-serif, system-ui, sans-serif;
+
+  --color-blush: var(--blush);
+  --color-blush-mid: var(--blush-mid);
+  --color-rose: var(--rose);
+  --color-rose-deep: var(--rose-deep);
+  --color-petal: var(--petal);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-cream: var(--cream);
+  --color-section-dark: var(--section-dark);
+  --color-contrast-fg: var(--contrast-fg);
+  --color-contrast-muted: var(--contrast-muted);
+  --color-contrast-accent: var(--contrast-accent);
+  --color-contrast-line: var(--contrast-line);
+}
+
+:root {
+  --blush: #fff5f7;
+  --blush-mid: #fce4ec;
+  --rose: #f3c1d0;
+  --rose-deep: #d4899f;
+  --petal: #e8a0b4;
+  --ink: #2a1c22;
+  --ink-soft: #6b4f5a;
+  --cream: #fffbfc;
+  --section-dark: #3a2830;
+  --contrast-fg: #fff8fa;
+  --contrast-muted: #e5c5d0;
+  --contrast-accent: #f3c1d0;
+  --contrast-line: rgba(255, 248, 250, 0.2);
+}
+
+html.dark {
+  --blush: #140f12;
+  --blush-mid: #1c1519;
+  --rose: #4a3038;
+  --rose-deep: #e8a8bc;
+  --petal: #d4899f;
+  --ink: #f7eef1;
+  --ink-soft: #b89aa5;
+  --cream: #181216;
+  --section-dark: #f0c8d4;
+  --contrast-fg: #2a1c22;
+  --contrast-muted: #5c4450;
+  --contrast-accent: #9a4d68;
+  --contrast-line: rgba(42, 28, 34, 0.18);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--blush);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+::selection {
+  background: var(--rose);
+  color: var(--ink);
+}
+
+.font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+}
+
+.bg-grain {
+  background-image:
+    radial-gradient(ellipse 70% 80% at 82% 40%, rgba(34, 188, 206, 0.16), transparent 62%),
+    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(243, 193, 208, 0.55), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 90% 20%, rgba(252, 228, 236, 0.75), transparent 50%);
+}
+
+html.dark .bg-grain {
+  background-image:
+    radial-gradient(ellipse 70% 80% at 82% 40%, rgba(34, 188, 206, 0.14), transparent 65%),
+    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(232, 168, 188, 0.12), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 90% 20%, rgba(74, 48, 56, 0.45), transparent 50%);
+}
+
+/* Layered glows — opacity crossfade (smooth; bg swaps snap) */
+.hero-portrait-glow {
+  position: absolute;
+  left: 50%;
+  top: 36%;
+  width: min(56rem, 180%);
+  height: min(56rem, 150%);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  filter: blur(42px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  will-change: opacity, transform;
+  animation: hero-glow-crossfade 14s ease-in-out infinite;
+}
+
+.hero-portrait-glow--teal {
+  background: radial-gradient(
+    circle,
+    rgba(34, 188, 206, 0.55) 0%,
+    rgba(34, 188, 206, 0.22) 32%,
+    rgba(34, 188, 206, 0.06) 55%,
+    transparent 72%
+  );
+  animation-delay: 0s;
+}
+
+.hero-portrait-glow--rose {
+  background: radial-gradient(
+    circle,
+    rgba(232, 160, 180, 0.58) 0%,
+    rgba(212, 137, 159, 0.24) 32%,
+    rgba(212, 137, 159, 0.06) 55%,
+    transparent 72%
+  );
+  animation-delay: -4.66s;
+}
+
+.hero-portrait-glow--violet {
+  background: radial-gradient(
+    circle,
+    rgba(176, 140, 220, 0.52) 0%,
+    rgba(140, 110, 190, 0.22) 32%,
+    rgba(140, 110, 190, 0.06) 55%,
+    transparent 72%
+  );
+  animation-delay: -9.33s;
+}
+
+@keyframes hero-glow-crossfade {
+  0%,
+  100% {
+    opacity: 0.15;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  20% {
+    opacity: 0.95;
+    transform: translate(-50%, -50%) scale(1.04);
+  }
+  40% {
+    opacity: 0.55;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+  55% {
+    opacity: 0.12;
+    transform: translate(-50%, -50%) scale(1.02);
+  }
+  70% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-portrait-glow {
+    animation: none;
+    opacity: 0.55;
+  }
+
+  .hero-portrait-glow--rose,
+  .hero-portrait-glow--violet {
+    opacity: 0;
+  }
+}
+
+/* Soft dissolve into hero bg — long ease, no hard band */
+.hero-portrait-fade {
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 42%,
+    rgba(0, 0, 0, 0.92) 58%,
+    rgba(0, 0, 0, 0.55) 72%,
+    rgba(0, 0, 0, 0.2) 86%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 42%,
+    rgba(0, 0, 0, 0.92) 58%,
+    rgba(0, 0, 0, 0.55) 72%,
+    rgba(0, 0, 0, 0.2) 86%,
+    transparent 100%
+  );
+}
+
+.section-pad {
+  padding-inline: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .section-pad {
+    padding-inline: 3rem;
+  }
+}
